@@ -56,26 +56,36 @@ $maxC4 = $data['c4'];
             </tr>
         </thead>
         <tbody>
-        <?php
-            $query ="SELECT kAlternatif,Nama, c1, c2, c3, c4,  
-            bc1, bc2, bc3, bc4
-            FROM kreteria, bobot ORDER BY c1 DESC, c2 DESC, c3 DESC, c4 DESC";
+        
+         <?php
+            $query = "SELECT kAlternatif, Nama, c1, c2, c3, c4, bc1, bc2, bc3, bc4, 
+            ROUND(bc1 * (c1 / $maxC1), 3) AS c1, 
+            ROUND(bc2 * (c2 / $maxC2), 3) AS c2, 
+            ROUND(bc3 * (c3 / $maxC3), 3) AS c3, 
+            ROUND(bc4 * (c4 / $maxC4), 3) AS c4, 
+            ROUND(bc1 * (c1 / $maxC1), 3) + 
+            ROUND(bc2 * (c2 / $maxC2), 3) + 
+            ROUND(bc3 * (c3 / $maxC3), 3) + 
+            ROUND(bc4 * (c4 / $maxC4), 3) AS total 
+            FROM kreteria, bobot 
+            ORDER BY total DESC";
             
             $result = mysqli_query($conn, $query);
 
         ?>
-        
+
         <?php $rangking = 1; ?>
         <?php while ($row = mysqli_fetch_array($result)) : ?>
         <?php 
         
         $KodaAlternatif = $row["kAlternatif"];
         $Nama = $row["Nama"];
-        $c1 = round ($row["bc1"] * ($row["c1"] / $maxC1),3);
-        $c2 = round ($row["bc2"] * ($row["c2"] / $maxC2),3);
-        $c3 = round ($row["bc3"] * ($row["c3"] / $maxC3),3);
-        $c4 = round ($row["bc4"] * ($row["c4"] / $maxC4),3);
-        $total = round ($c1 + $c2 + $c3 + $c4,3) ;
+        $c1 = $row["c1"];
+        $c2 = $row["c2"];
+        $c3 = $row["c3"];
+        $c4 = $row["c4"];
+        $total = $row["total"];
+
         $status = $total;
 
         
